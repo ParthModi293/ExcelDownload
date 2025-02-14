@@ -6,8 +6,10 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -21,10 +23,11 @@ public class ExcelService {
 
         Sheet sheet = workbook.createSheet("Sheet 1");
         sheet.setDefaultColumnWidth(15);
-        Row headerRow = sheet.createRow(0);
+
+        Row headerRow = sheet.createRow(1);
         CellStyle style = workbook.createCellStyle();
        XSSFFont font = (XSSFFont) workbook.createFont();
-        font.setFontHeight(8);
+        font.setFontHeight(10);
         font.setBold(true);
         style.setFont(font);
         style.setAlignment(HorizontalAlignment.CENTER);
@@ -45,7 +48,7 @@ public class ExcelService {
 
         for(int i=0; i < dataList.size(); i++){
 
-            Row dataRow = sheet.createRow(i+2);
+            Row dataRow = sheet.createRow(i+3);
             Map<String, String> data = dataList.get(i);
 
             int columnIndex = 0;
@@ -58,6 +61,7 @@ public class ExcelService {
 
 
         }
+//        return convertToBase64(workbook);
 
         try (FileOutputStream out = new FileOutputStream("/home/bizott-2/CodingPractice/test.xlsx")) {
            workbook.write(out);
@@ -67,6 +71,16 @@ public class ExcelService {
         }
 
 
+    }
+
+
+    public String convertToBase64(Workbook workbook) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            workbook.write(outputStream);
+            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+        } catch (Exception e) {
+            throw new RuntimeException("Error while converting Excel to Base64", e);
+        }
     }
 
 }

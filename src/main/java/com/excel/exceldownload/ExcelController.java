@@ -19,7 +19,7 @@ public class ExcelController {
     @PostMapping("/excel")
     public ResponseEntity<?> downloadExcel(@RequestBody ExcelRequestDto excelRequestDto) {
 
-       excelService.generateExcel(excelRequestDto);
+           excelService.generateExcel(excelRequestDto);
         return ResponseEntity.ok()
                .body("Download");
 
